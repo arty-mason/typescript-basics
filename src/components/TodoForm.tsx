@@ -1,24 +1,34 @@
-import React, { useState } from "react";
+import React, { useRef } from "react";
 
-const TodoForm: React.FC = () => {
-  const [title, setTitle] = useState<string>("");
+interface TodoFormProps {
+  onAdd(title: string): void;
+}
 
-  const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(event.target.value);
-  };
+const TodoForm: React.FC<TodoFormProps> = (props) => {
+  // const [title, setTitle] = useState<string>("");
+
+  // const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setTitle(event.target.value);
+  // };
+
+  const ref = useRef<HTMLInputElement>(null);
 
   const keyPressHandler = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter") {
-      console.log(title);
-      setTitle("");
+    if (event.key === "Enter" && ref.current?.value) {
+      event.preventDefault();
+      props.onAdd(ref.current.value);
+      ref.current.value = "";
+      // console.log(title);
+      // setTitle("");
     }
   };
 
   return (
     <form className="input-field mt2">
       <input
-        onChange={changeHandler}
-        value={title}
+        // onChange={changeHandler}
+        // value={title}
+        ref={ref}
         type="text"
         id="title"
         placeholder=" Write the task here"
